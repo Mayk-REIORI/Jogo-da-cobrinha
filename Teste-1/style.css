@@ -1,5 +1,6 @@
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -9,4 +10,16 @@ body {
 
 canvas {
     border: 1px solid #fff;
+}
+
+#score {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+#message {
+    color: #ff0000;
+    font-size: 24px;
+    margin-top: 10px;
 }

@@ -14,6 +14,11 @@ let food = {
     y: Math.floor(Math.random() * canvasBoxes) * box,
 };
 
+let score = 0;
+let previousScore = 0;
+let gamePaused = false;
+let game;
+
 document.addEventListener("keydown", setDirection);
 
 function setDirection(event) {
@@ -25,6 +30,16 @@ function setDirection(event) {
         direction = "RIGHT";
     } else if (event.keyCode === 40 && direction !== "UP") {
         direction = "DOWN";
+    } else if (event.keyCode === 48) {
+        // Tecla "0" para pausar/retomar
+        gamePaused = !gamePaused;
+        if (gamePaused) {
+            clearInterval(game);
+            document.getElementById("message").innerText = "Jogo Pausado";
+        } else {
+            document.getElementById("message").innerText = "";
+            game = setInterval(draw, 200);
+        }
     }
 }
 
@@ -38,6 +53,8 @@ function collision(newHead, snake) {
 }
 
 function draw() {
+    if (gamePaused) return;
+
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvasSize, canvasSize);
 
@@ -64,6 +81,8 @@ function draw() {
             x: Math.floor(Math.random() * canvasBoxes) * box,
             y: Math.floor(Math.random() * canvasBoxes) * box,
         };
+        score++;
+        document.getElementById("score").innerText = "Pontuação: " + score * 10;
     } else {
         snake.pop();
     }
@@ -78,9 +97,19 @@ function draw() {
         collision(newHead, snake)
     ) {
         clearInterval(game);
+        document.getElementById("message").innerText =
+            "Você perdeu! Pontuação final: " +
+            score * 10 +
+            ". Pontuação anterior: " +
+            previousScore * 10;
+        previousScore = score;
+        score = 0;
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
     }
 
     snake.unshift(newHead);
 }
 
-let game = setInterval(draw, 200);
+game = setInterval(draw, 200); // Intervalo ajustado para 200 milissegundos
